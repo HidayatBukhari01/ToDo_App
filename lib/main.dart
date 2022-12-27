@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:task_app/model/notes_model.dart';
 import 'package:task_app/view/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(NotesModelAdapter());
+  await Hive.openBox<NotesModel>('notes');
   runApp(const MyApp());
 }
 
@@ -20,7 +28,7 @@ class _MyAppState extends State<MyApp> {
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Notes App',
       theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
